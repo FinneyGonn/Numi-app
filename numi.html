@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #C8D5B9;
+            min-height: 100vh;
+            color: #2d3a2e;
+            overflow: hidden;
+        }
+
+        nav {
+            background: #FAF4E1;
+            padding: 1.2rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            border-bottom: 1px solid #a8b89d;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #7a8a6e;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #4a5a3e;
+        }
+
+        nav a.active {
+            color: #3d4d31;
+        }
+
+        .sections-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            overflow-y: auto;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        section.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            color: #3d4d31;
+        }
+
+        .animated-text {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            color: #5a6a4e;
+            font-weight: 300;
+        }
+
+        .fade-text {
+            animation: fadeInOut 6s infinite;
+        }
+
+        @keyframes fadeInOut {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            20%,
+            80% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .custom-content {
+            background: #F5F0DC;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 2px solid #a8b89d;
+            margin-top: 2rem;
+            line-height: 1.8;
+            color: #4a5a3e;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: #A8B89D;
+            padding: 1.2rem;
+            border-radius: 4px;
+            border: 1px solid #8fa382;
+            transition: all 0.2s ease;
+        }
+
+        .info-card:hover {
+            border-color: #7a8a6e;
+            background: #9aaa8f;
+        }
+
+        .info-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+            color: #2d3a2e;
+            font-weight: 500;
+        }
+
+        .info-card p {
+            color: #4a5a3e;
+            font-size: 0.9rem;
+        }
+
+        .collapsible {
+            background: #F5F0DC;
+            padding: 1.2rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #a8b89d;
+        }
+
+        .collapsible:hover {
+            border-color: #8fa382;
+        }
+
+        .collapsible h3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            color: #7a8a6e;
+        }
+
+        .arrow.active {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+
+        .collapsible-content.active {
+            max-height: 500px;
+            padding-top: 1.5rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-tag {
+            background: #E8E3CE;
+            padding: 0.7rem;
+            border-radius: 3px;
+            text-align: center;
+            font-weight: 400;
+            border: 1px solid #a8b89d;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .skill-tag:hover {
+            border-color: #8fa382;
+            background: #ddd8c3;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-link {
+            background: #F5F0DC;
+            padding: 1.5rem;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            color: #4a5a3e;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border: 1px solid #a8b89d;
+        }
+
+        .contact-link:hover {
+            border-color: #8fa382;
+            background: #e8e3ce;
+            color: #2d3a2e;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: #F5F0DC;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 1px solid #a8b89d;
+            transition: all 0.2s ease;
+        }
+
+        .project-card:hover {
+            border-color: #8fa382;
+            background: #e8e3ce;
+        }
+
+        .project-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #2d3a2e;
+            font-weight: 500;
+        }
+
+        .project-card p {
+            color: #4a5a3e;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .project-link {
+            color: #5a6a4e;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .project-link:hover {
+            color: #2d3a2e;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .animated-text {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a data-section="quien-soy" class="nav-link active">¿Quienes somos?</a></li>
+            <li><a data-section="sobre-mi" class="nav-link">Todo sobre nuestra app</a></li>
+            <li><a data-section="proyectos" class="nav-link">¿Por que estamos aqui?</a></li>
+            <li><a data-section="contacto" class="nav-link">Descarga la app!</a></li>
+        </ul>
+    </nav>
+
+    <div class="sections-container">
+        <section id="quien-soy" class="active">
+            <h1>¿Quién soy?</h1>
+            <div class="animated-text">
+                <span id="greeting"></span>
+            </div>
+
+            <div class="custom-content">
+                <p>
+                    Hola, somos un proyecto independiente. Buscamos desarrollar una app que permita
+                    a personas con discalculia aprender matemáticas de una manera sencilla y accesible.
+                </p>
+                <br>
+
+                <h3>¿Qué es la discalculia?</h3>
+                <br>
+
+                <p>
+                    La discalculia es una dificultad específica del aprendizaje que afecta la comprensión
+                    de los números y las matemáticas.
+                    Las personas con discalculia pueden tener problemas para reconocer cantidades,
+                    entender operaciones básicas, recordar fórmulas o manejar el tiempo y el dinero,
+                    aunque tengan una inteligencia normal o alta.
+                </p>
+
+                <p>
+                    No es falta de esfuerzo ni de interés: simplemente el cerebro procesa los números
+                    de una manera diferente.
+                </p>
+            </div>
+
+        </section>
+
+        <section id="sobre-mi">
+            <h1>Todo sobre nuestra app</h1>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>Nombre beta</h3>
+                    <p>Numi</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Desarrollador</h3>
+                    <p>Finn Skjaldarson </p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Tipo de aplicación</h3>
+                    <p>Aprendizaje, Educacion, Matematicas</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Idiomas</h3>
+                    <p>Ingles, Español, Noruego</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Meta</h3>
+                    <p>Enseñar a las personas con problemas para la matematicas</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Costo</h3>
+                    <p>App totalmente Freemium con donaciones opcionales</p>
+                </div>
+            </div>
+
+            <div class="collapsible" onclick="toggleCollapsible()">
+                <h3>
+                    Etiquetas/Key words
+                    <span class="arrow" id="arrow">▼</span>
+                </h3>
+                <div class="collapsible-content" id="skills">
+                    <div class="skills-grid">
+                        <div class="skill-tag">Aprendizaje</div>
+                        <div class="skill-tag">Educación</div>
+                        <div class="skill-tag">Matematicas</div>
+                        <div class="skill-tag">Aprendizaje adaptativo</div>
+                        <div class="skill-tag">Educacion digital</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="proyectos">
+            <h1>¿Porque existimos?</h1>
+
+            <div class="projects-grid">
+                <!-- 👇 AGREGA TUS PROYECTOS AQUÍ 👇 -->
+                <div class="project-card">
+                    <h3>Algo simple</h3>
+                    <p>Muchas personas crecen creyendo que "no son buenas para las matemáticas", cuando en realidad
+                        nunca se les
+                        enseñó de una forma que se adaptara a cómo funciona su mente.</p>
+                    <br>
+                    <p>Existen estudiantes con discalculia y otras dificultades de aprendizaje que se esfuerzan el
+                        doble, pero
+                        aun así se sienten frustrados, incomprendidos o dejados atrás en el aula. No porque no puedan
+                        aprender,
+                        sino porque el sistema suele enseñar de una sola manera, esperando que todos aprendan igual.</p>
+                    <br>
+                    <h3>FS Labs nace para cambiar eso.</h3>
+                    <br>
+                    <p>Creemos que aprender no debería generar ansiedad ni miedo a equivocarse. Por eso desarrollamos
+                        herramientas educativas que se adaptan al ritmo de cada persona, usan explicaciones claras,
+                        apoyos
+                        visuales y prácticas progresivas.</p>
+                    <p>Nuestro objetivo no es reemplazar a los profesores ni a la educación tradicional, sino
+                        acompañarla,
+                        ofreciendo una alternativa que respete la diversidad cognitiva y haga del aprendizaje una
+                        experiencia
+                        más humana, accesible y justa.</p>
+                    <p>Porque entender no debería ser un privilegio, y aprender matemáticas no debería doler.</p>
+                </div>
+
+        </section>
+
+        <section id="contacto">
+            <h1>Botón de descarga/Redes sociales</h1>
+
+            <div class="contact-grid">
+                <!-- 👇 CAMBIA LOS # POR TUS LINKS REALES 👇 -->
+                <a href="https://www.instagram.com/danxrl8/" class="contact-link" target="_blank">
+                    Instagram
+                    (Dale click)
+                </a>
+                <div class="project-card">
+                    <h3>Link de descarga</h3>
+                    <br>
+                    <p>Al dia de hoy, no podemos brindarte un link para poder descargar la aplicacion, se espera que
+                        este disponible para los siguientes dispositivos</p>
+                    <ul>
+                        <li>PC</li>
+                        <li>Android</li>
+                        <li>Ios</li>
+                    </ul>
+                    <br>
+                    <p>Todo esto se espera para el mes 09 de 2026, esperamos que todo sea de tu agrado.</p>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Animación del texto alternado
+        const greetings = [
+            "Hola, somos Fs Labs",
+            "Un estudio independiente enfocado en la tecnología y accesibilidad."
+        ];
+        let currentIndex = 0;
+        const greetingElement = document.getElementById('greeting');
+
+        function changeGreeting() {
+            greetingElement.style.opacity = '0';
+            greetingElement.style.transform = 'translateY(10px)';
+
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % greetings.length;
+                greetingElement.textContent = greetings[currentIndex];
+                greetingElement.style.opacity = '1';
+                greetingElement.style.transform = 'translateY(0)';
+            }, 500);
+        }
+
+        // Iniciar con el primer mensaje
+        greetingElement.textContent = greetings[0];
+        greetingElement.style.transition = 'all 0.5s ease';
+
+        // Cambiar cada 3 segundos
+        setInterval(changeGreeting, 2000);
+
+        // Toggle collapsible
+        function toggleCollapsible() {
+            const content = document.getElementById('skills');
+            const arrow = document.getElementById('arrow');
+
+            content.classList.toggle('active');
+            arrow.classList.toggle('active');
+        }
+
+        // Section navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all sections and nav links
+                sections.forEach(section => section.classList.remove('active'));
+                navLinks.forEach(navLink => navLink.classList.remove('active'));
+
+                // Add active class to clicked nav link
+                this.classList.add('active');
+
+                // Show corresponding section
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
